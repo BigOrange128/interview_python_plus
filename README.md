@@ -1168,6 +1168,14 @@ apache 相对nginx 的优点：
 
 HTTPS握手,对称加密,非对称加密,TLS/SSL,RSA
 
+SSL是TLS的前身
+
+SSL:secure sockets layer 安全套接层 TLS:transport layer security 安全传输层协议
+
+对称加密:加解密共用一个秘钥
+
+非对称加密:一对秘钥，包括公钥和私钥，发送方使用接受方的公钥加密数据传输，接受方使用自己的私钥解密。
+
 ## 10 XSRF和XSS
 
 * CSRF(Cross-site request forgery)跨站请求伪造
@@ -1188,8 +1196,18 @@ POST所对应的URI并非创建的资源本身，而是资源的接收者。比�
 
 PUT所对应的URI是要创建或更新的资源本身。比如：`PUT http://www.forum/articles/4231`的语义是创建或更新ID为4231的帖子。对同一URI进行多次PUT的副作用和一次PUT是相同的；因此，PUT方法具有幂等性。
 
+URL:(uniform/universal resource locator)统一资源定位符
+
+URI:(uniform resource identifier)统一资源标识符(一种标准)
 
 ## 12 RESTful架构(SOAP,RPC)
+> 一种软件架构风格、设计风格，而不是标准。
+
+(1)每一个URI代表一种资源。
+
+(2)客户端和服务器之间，传递这种资源的某种表现层。
+
+(3)客户端通过四个HTTP动词，对服务器端资源进行操作，实现"表示层状态转化">
 
 推荐: http://www.ruanyifeng.com/blog/2011/09/restful.html
 
@@ -1207,7 +1225,7 @@ RPC（Remote Procedure Call Protocol）——远程过程调用协议，它是�
 进化的顺序: RPC -> SOAP -> RESTful
 
 ## 15 CGI和WSGI
-CGI是通用网关接口，是连接web服务器和应用程序的接口，用户通过CGI来获取动态数据或文件等。
+CGI(common gateway interface)是通用网关接口，是连接web服务器和应用程序的接口，用户通过CGI来获取动态数据或文件等。
 CGI程序是一个独立的程序，它可以用几乎所有语言来写，包括perl，c，lua，python等等。
 
 WSGI, Web Server Gateway Interface，是Python应用程序或框架和Web服务器之间的一种接口，WSGI的其中一个目的就是让用户可以用统一的语言(Python)编写前后端。
@@ -1220,18 +1238,44 @@ WSGI, Web Server Gateway Interface，是Python应用程序或框架和Web服务�
 
 中间人攻击（Man-in-the-middle attack，通常缩写为MITM）是指攻击者与通讯的两端分别创建独立的联系，并交换其所收到的数据，使通讯的两端认为他们正在通过一个私密的连接与对方直接对话，但事实上整个会话都被攻击者完全控制。
 
+DNS欺骗，会话劫持
+
 ## 17 c10k问题
 
 所谓c10k问题，指的是服务器同时支持成千上万个客户端的问题，也就是concurrent 10 000 connection（这也是c10k这个名字的由来）。
 推荐: https://my.oschina.net/xianggao/blog/664275
 
 ## 18 socket
+> 应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。
+
+(1)服务器端先初始化socket
+
+(2)与端口绑定
+
+(3)监听端口
+
+(4)调用accept阻塞，等待客户端连接
+
+(5)客户端初始化一个socket，连接服务器
 
 推荐: http://www.360doc.com/content/11/0609/15/5482098_122692444.shtml
 
 Socket=Ip address+ TCP/UDP + port
 
 ## 19 浏览器缓存
+> Expires:HTTP1.O/cache-control:1.1(使用多)
+
+cache-control:
+
+Last-Modified(最后修改时间)：用于记录修改，判断是否需要返回整片资源(包体)
+
+If-modified-since：表示请求时间，与上方对比，确定是否有新的改动
+
+Etag：当前资源在服务器的唯一标识，更精确的判断是否修改
+
+If-None-Match：包含Etag值，与服务器对比
+
+Max-age：客户机可以接收生存期，不大于指定时间的响应
 
 推荐: http://www.cnblogs.com/skynet/archive/2012/11/28/2792503.html
 
@@ -1242,7 +1286,7 @@ Socket=Ip address+ TCP/UDP + port
 推荐: http://blog.csdn.net/elifefly/article/details/3964766
 
 1. 请求头Host字段,一个服务器多个网站
-2. 长链接
+2. 长链接(一次链接多次请求)
 3. 文件断点续传
 4. 身份认证,状态管理,Cache缓存
 
