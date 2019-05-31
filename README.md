@@ -477,7 +477,10 @@ http://stackoverflow.com/questions/3394835/args-and-kwargs
 
 这个问题比较大,推荐: http://stackoverflow.com/questions/739654/how-can-i-make-a-chain-of-function-decorators-in-python
 
+我也写过一个关于装饰器的文章，(Python装饰器)[http://139.224.13.65/post/2/]
+
 中文: http://taizilongxu.gitbooks.io/stackoverflow-about-python/content/3/README.html
+
 
 ## 12 鸭子类型
 
@@ -733,7 +736,7 @@ map函数是对一个序列的每个项依次执行函数，下面是对一个�
 [2, 4, 6]
 ```
 
-reduce函数是对一个序列的每个项迭代调用函数，下面是求3的阶乘：
+reduce函数是对一个序列的每个项迭代调用函数(先对序列中的第1,2个元素进行操作，得到的结果在与第三个元素操作。)，下面是求3的阶乘：
 
 ```python
 >>> reduce(lambda x,y:x*y,range(1,4))
@@ -769,7 +772,7 @@ d =  [1, 2, 3, 4, ['a', 'b']]
 
 ## 24 Python垃圾回收机制
 
-Python GC主要使用引用计数（reference counting）来跟踪和回收垃圾。在引用计数的基础上，通过“标记-清除”（mark and sweep）解决容器对象可能产生的循环引用问题，通过“分代回收”（generation collection）以空间换时间的方法提高垃圾回收效率。
+Python GC(Gabage Collection)主要使用引用计数（reference counting）来跟踪和回收垃圾。在引用计数的基础上，通过“标记-清除”（mark and sweep）解决容器对象可能产生的循环引用问题，通过“分代回收”（generation collection）以空间换时间的方法提高垃圾回收效率。
 
 ### 1 引用计数
 
@@ -892,6 +895,12 @@ epoll改了三个缺点.
 4. 解除死锁
     1. 剥夺资源
     2. 撤销进程
+
+银行家算法：
+
+允许进程动态地申请资源，但系统在进行资源分配之前，应先计算此次分配资源的安全性，若分配不会导致系统进入不安全状态，则分配，反之则不分配。
+
+当进程对资源的最大需求量不超过系统现有资源时即可分配。
 
 死锁概念处理策略详细介绍:https://wizardforcel.gitbooks.io/wangdaokaoyan-os/content/10.html
 
