@@ -1,5 +1,5 @@
 # interview_python_plus
-> 在taizilongxu / interview_python的基础上，加入了自己的理解，修改了错误。
+> 在taizilongxu / interview_python的基础上，加入了自己的理解，修改一些错误。大佬的文档非常详细，时间有点长了，部分链接失效。最近也要面临就业了，所以打算重新整理一下，顺便加深一下记忆。
 
 **Table of Contents**
 
@@ -185,8 +185,41 @@ print a  # [1]
 如果还不明白的话,这里有更好的解释: http://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference
 
 ## 2 Python中的元类(metaclass)
+> 即类生成器
 
-这个非常的不常用,但是像ORM这种复杂的结构还是会需要的,详情请看:http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python
+Python中的元素从上至下分别为type -> metaclass(元类) -> class -> instance
+
+了解元类之前我们看一下创建类的另一种方法：
+  
+    #定义一个函数
+    def fn(self, name = 'world'):
+        print('Hello', %s'.%name)
+    #使用type方法创建一个类
+    #type中的三个参数分别为：类名，父类，包含的方法。
+    #与用class创建没有区别。
+    Hell0 = type('Hello', (object, ), dict(say_hello = fn))
+
+接下来我们看一下如何创建一个元类：
+
+    #元类的命名后缀为Metaclass
+    class SayMetaClass(type):
+      #__new__后面的三个参数依旧是类名，父类，包含的方法。
+      def __new__(cls, name, bases, attrs):
+        attrs['say_'+name] = lambda self, value, saying = name:print(saying+','+value+'!')
+        return type.__new__(cls, name, bases, attrs)
+        
+最后我们用刚才创建的元类创建类来看一下：
+
+    class Hello(object, MetaClass=SayMetaClass):
+      pass
+    #因为元类中定义的方法，虽然我们的Hello中并没有定义方法，它自动生成了一个say_Hello方法。
+    #在上面的__new__函数中，我们用attrs['say_'+name]定义了方法。里面使用name变量，所以根据类名生成了不同的方法。
+    hello = Hello()
+    hello.say_Hello('world')#输出Hello,world!
+
+如果不好理解的话推荐一篇文章，[两句话掌握 Python 最难知识点——元类](http://python.jobbole.com/88795/)。
+
+像ORM(对象关系映射)这种复杂的结构还是会需要的,详情请看:http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python
 
 ## 3 @staticmethod和@classmethod
 
