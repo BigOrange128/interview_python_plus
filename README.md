@@ -395,7 +395,10 @@ http://stackoverflow.com/questions/5082452/python-string-formatting-vs-format
 
 这个是stackoverflow里python排名第一的问题,值得一看: http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python
 
-这是中文版: http://taizilongxu.gitbooks.io/stackoverflow-about-python/content/1/README.html
+这个也不错，讲的很详细，[完全理解 Python 迭代对象、迭代器、生成器](http://python.jobbole.com/87805/)
+
+(链接貌似失效了)这是中文版: http://taizilongxu.gitbooks.io/stackoverflow-about-python/content/1/README.html
+
 
 这里有个关于生成器的创建问题面试官有考：
 问：  将列表生成式中[]改成() 之后数据结构是否改变？ 
@@ -412,6 +415,7 @@ http://stackoverflow.com/questions/5082452/python-string-formatting-vs-format
 通过列表生成式，可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的。而且，创建一个包含百万元素的列表，不仅是占用很大的内存空间，如：我们只需要访问前面的几个元素，后面大部分元素所占的空间都是浪费的。因此，没有必要创建完整的列表（节省大量内存空间）。在Python中，我们可以采用生成器：边循环，边计算的机制—>generator
 
 ## 10 `*args` and `**kwargs`
+> 参数组
 
 用`*args`和`**kwargs`只是为了方便并没有强制使用它们.
 
@@ -465,6 +469,7 @@ a = aardvark, b = baboon, c = cat
 http://stackoverflow.com/questions/3394835/args-and-kwargs
 
 ## 11 面向切面编程AOP和装饰器
+> 做测试的同学会经常用到，要提前了解。
 
 这个AOP一听起来有点懵,同学面阿里的时候就被问懵了...
 
@@ -536,6 +541,36 @@ d.foo1()
 
 **按照经典类的查找顺序`从左到右深度优先`的规则，在访问`d.foo1()`的时候,D这个类是没有的..那么往上查找,先找到B,里面没有,深度优先,访问A,找到了foo1(),所以这时候调用的是A的foo1()，从而导致C重写的foo1()被绕过**
 
+> 一个新式类的C3算法的例子
+
+```python
+class A(o):pass
+class B(o):pass
+class C(o):pass
+class E(A, B):pass
+class F(B, C):pass
+class G(E, F):pass
+```
+
+当对类E进行查找时，我们会得到这么一个式子：
+  
+    #        最终操作序列 + 当前操作序列
+    mro(E) = [E] + merge(mro(A), mro(B), [A, B]) = [E] + merge([A, O], [B, O], [A, B])
+
+处理规则如下：
+
+(1)当第一个序列的第一个元素是后续序列的第一个元素，或者不在后续序列中再出现，则将这个元素合并到最终的方法解析顺序序列中，并从当前操作的全部序列中删除。
+
+(2)如果不符合上一条，则跳过此元素，查找下一个列表的第一个元素，重复上一条的判断规则。
+
+按照上述的规则处理后我们会得到:
+    
+    #首先查找第一个序列的第一个元素A，符合规则
+    mro(E) = [E, A] + merge([0], [B,0], [B])
+    #随后查找O，不符合，跳过，查找B， 查找O， 完成。
+    mro(E) = [E, A, B] + merge([0], [0]) = [E, A, B, 0]
+    
+更详细的解释推荐，[Python新式类多继承顺序采用的C3算法](https://blog.csdn.net/l_womeiyoumingzi/article/details/81024173)
 
 
 ## 15 `__new__`和`__init__`的区别
