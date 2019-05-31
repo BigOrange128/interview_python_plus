@@ -1945,13 +1945,9 @@ def isSameTree(p, q):
 
 推荐: http://blog.csdn.net/hinyunsin/article/details/6315502
 
-如果有如下两个:
-
-p1         tmp2             p2
+![Vlwyn0.png](https://s2.ax1x.com/2019/05/31/Vlwyn0.png)
 
 A   B   D   G   C   E   F   H(前序)
-
-i1         tmp             i2
 
 D   G   B   A   E   C   H   F(中序)
 
@@ -1982,6 +1978,21 @@ def deep(root):
 ```
 
 ## 21 单链表逆置
+
+(1)从第二个节点开始记录当前节点和前一节点，并将前一节点断开。
+
+![VlwRNF.jpg](https://s2.ax1x.com/2019/05/31/VlwRNF.jpg)
+
+(2)进入循环
+
+(3)记录当前节点的下一节点，将当前节点下一节点更改为前一节点。
+
+![Vlwc7T.jpg](https://s2.ax1x.com/2019/05/31/Vlwc7T.jpg)
+
+
+(4)两个指针向后移动，上一节点改为当前，当前节点改为下一节点。
+
+![Vlw2AU.jpg](https://s2.ax1x.com/2019/05/31/Vlw2AU.jpg)
 
 ```python
 class Node(object):
