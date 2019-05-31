@@ -1054,8 +1054,7 @@ SERLALIZABLE
 
 串行化，最高的事务隔离级别，不管多少事务，挨个运行完一个事务的所有子事务之后才可以执行另外一个事务里面的所有子事务，这样就解决了脏读、不可重复读和幻读的问题了
 
->  参考：[MVCC浅析](http://blog.csdn.net/chosen0ne/article/details/18093187)
->  参考：[事务及事务隔离级别](https://www.cnblogs.com/xrq730/p/5087378.html)
+>  参考：[MVCC浅析](http://blog.csdn.net/chosen0ne/article/details/18093187)，[事务及事务隔离级别](https://www.cnblogs.com/xrq730/p/5087378.html)
 
 
 
