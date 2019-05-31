@@ -979,8 +979,6 @@ Bulid过程可以分解为4个步骤:预处理(Prepressing), 编译(Compilation)
 
 ## 2 数据库索引
 
-推荐: http://tech.meituan.com/mysql-index.html
-
 [MySQL索引背后的数据结构及算法原理](http://blog.codinglabs.org/articles/theory-of-mysql-index.html)
 
 聚集索引,非聚集索引,B-Tree,B+Tree,最左前缀原理
@@ -1038,7 +1036,26 @@ innodb会为每一行添加两个字段，分别表示该行**创建的版本**�
 
 通过MVCC很好的实现了事务的隔离性，可以达到repeated read级别，要实现serializable还必须加锁。
 
+隔离级别由高到低：
+  
+READ_UNCOMMITTED
+
+读未提交，即能够读取到没有被提交的数据，所以很明显这个级别的隔离机制无法解决脏读、不可重复读、幻读中的任何一种，因此很少使用
+
+READ_COMMITED
+
+读已提交，即能够读到那些已经提交的数据，自然能够防止脏读，但是无法限制不可重复读和幻读
+
+REPEATABLE_READ
+
+重复读取，即在数据读出来之后加锁，类似"select * from XXX for update"，明确数据读取出来就是为了更新用的，所以要加一把锁，防止别人修改它。REPEATABLE_READ的意思也类似，读取了一条数据，这个事务不结束，别的事务就不可以改这条记录，这样就解决了脏读、不可重复读的问题，但是幻读的问题还是无法解决
+
+SERLALIZABLE
+
+串行化，最高的事务隔离级别，不管多少事务，挨个运行完一个事务的所有子事务之后才可以执行另外一个事务里面的所有子事务，这样就解决了脏读、不可重复读和幻读的问题了
+
 >  参考：[MVCC浅析](http://blog.csdn.net/chosen0ne/article/details/18093187)
+>  参考：[事务及事务隔离级别](https://www.cnblogs.com/xrq730/p/5087378.html)
 
 
 
