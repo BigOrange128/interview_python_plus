@@ -1071,15 +1071,15 @@ MySQL存储引擎－－MyISAM与InnoDB区别: https://segmentfault.com/a/1190000
 
 ## 1 三次握手
 
-1. 客户端通过向服务器端发送一个SYN来创建一个主动打开，作为三次握手的一部分。客户端把这段连接的序号设定为随机数 A。
-2. 服务器端应当为一个合法的SYN回送一个SYN/ACK。ACK 的确认码应为 A+1，SYN/ACK 包本身又有一个随机序号 B。
+1. 客户端通过向服务器端发送一个SYN(同步序列编号synchronize sequence numbers)来创建一个主动打开，作为三次握手的一部分。客户端把这段连接的序号设定为随机数 A。
+2. 服务器端应当为一个合法的SYN回送一个SYN/ACK。ACK(确认字符Acknowledgement) 的确认码应为 A+1，SYN/ACK 包本身又有一个随机序号 B。
 3. 最后，客户端再发送一个ACK。当服务端受到这个ACK的时候，就完成了三路握手，并进入了连接创建状态。此时包序号被设定为收到的确认号 A+1，而响应则为 B+1。
 
 ## 2 四次挥手
 
 _注意: 中断连接端可以是客户端，也可以是服务器端. 下面仅以客户端断开连接举例, 反之亦然._
 
-1. 客户端发送一个数据分段, 其中的 FIN 标记设置为1. 客户端进入 FIN-WAIT 状态. 该状态下客户端只接收数据, 不再发送数据.
+1. 客户端发送一个数据分段, 其中的 FIN(结束标志) 标记设置为1. 客户端进入 FIN-WAIT 状态. 该状态下客户端只接收数据, 不再发送数据.
 2. 服务器接收到带有 FIN = 1 的数据分段, 发送带有 ACK = 1 的剩余数据分段, 确认收到客户端发来的 FIN 信息.
 3. 服务器等到所有数据传输结束, 向客户端发送一个带有 FIN = 1 的数据分段, 并进入 CLOSE-WAIT 状态, 等待客户端发来带有 ACK = 1 的确认报文.
 4. 客户端收到服务器发来带有 FIN = 1 的报文, 返回 ACK = 1 的报文确认, 为了防止服务器端未收到需要重发, 进入 TIME-WAIT 状态. 服务器接收到报文后关闭连接. 客户端等待 2MSL 后未收到回复, 则认为服务器成功关闭, 客户端关闭连接.
@@ -1091,12 +1091,22 @@ _注意: 中断连接端可以是客户端，也可以是服务器端. 下面仅
 地址解析协议(Address Resolution Protocol)，其基本功能为透过目标设备的IP地址，查询目标的MAC地址，以保证通信的顺利进行。它是IPv4网络层必不可少的协议，不过在IPv6中已不再适用，并被邻居发现协议（NDP）所替代。
 
 ## 4 urllib和urllib2的区别
+> 在Python3中，统一为urllib
 
 这个面试官确实问过,当时答的urllib2可以Post而urllib不可以.
 
 1. urllib提供urlencode方法用来GET查询字符串的产生，而urllib2没有。这是为何urllib常和urllib2一起使用的原因。
 2. urllib2可以接受一个Request类的实例来设置URL请求的headers，urllib仅可以接受URL。这意味着，你不可以伪装你的User Agent字符串等。
 
+四个模块：
+
+(1)urllib.request 用来发送request和获取request的结果
+
+(2)urllib.error 包含了urllib.request产生的异常
+
+(3)urllib.parse 用来解析和处理URL
+
+(4)urllib.rebotparse 用来解析页面的robots.txt文件
 
 ## 5 Post和Get
 [GET和POST有什么区别？及为什么网上的多数答案都是错的](http://www.cnblogs.com/nankezhishi/archive/2012/06/09/getandpost.html)
@@ -1114,6 +1124,7 @@ post: [RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1](http://tools.ietf.org
 | 储存位置 | 客户端                        | 服务器端    |
 | 目的   | 跟踪会话，也可以保存用户偏好设置或者保存用户名密码等 | 跟踪会话    |
 | 安全性  | 不安全                        | 安全      |
+| 时效  | 可以很久                        | 不能很久，服务器压力问题      |
 
 session技术是要使用到cookie的，之所以出现session技术，主要是为了安全。
 
@@ -1127,7 +1138,7 @@ nginx 相对 apache 的优点：
 * 社区活跃
 
 apache 相对nginx 的优点：
-* rewrite ，比nginx 的rewrite 强大
+* rewrite ，比nginx 的rewrite(实现URL重写，可以用于限制特定IP访问网站) 强大
 * 模块超多，基本想到的都可以找到
 * 少bug ，nginx 的bug 相对较多
 * 超稳定
@@ -1135,9 +1146,11 @@ apache 相对nginx 的优点：
 ## 8 网站用户密码保存
 
 1. 明文保存
-2. 明文hash后保存,如md5
-3. MD5+Salt方式,这个salt可以随机
+2. 明文hash后保存,如md5。md5:严格来说是摘要算法，通过hash后无法重新复原原始数据。
+3. MD5+Salt方式,这个salt可以随机。salt:俗称"加盐"，在字符串后面再拼接一段随机字符。
 4. 知乎使用了Bcrypy(好像)加密
+
+关于加密强烈推荐一篇文章：[给用户的密码加点盐吧](https://mp.weixin.qq.com/s?__biz=MzU2NDY5MzEzNA==&mid=2247483770&idx=1&sn=ee88c9b8923c735ba900f90be72d38a0&chksm=fc46509bcb31d98d8175695a5e236910435288c13c500394909cedaefda10213a5245c6d3341&scene=4&subscene=126&ascene=0&devicetype=android-26&version=2700033c&nettype=cmnet&abtest_cookie=BQABAAoACwASABMAFQAHACOXHgBWmR4AxZkeANyZHgD6mR4AA5oeAAyaHgAAAA%3D%3D&lang=zh_CN&pass_ticket=IzBRJiHSBQ%2BwxxP9%2BlqoP1almdgo6L0Yp6HdFzATgjN8%2BPiW3k5%2Bcpf%2FQCq8Wufb&wx_header=1)
 
 ## 9 HTTP和HTTPS
 
