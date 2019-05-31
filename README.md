@@ -1265,7 +1265,7 @@ Socket=Ip address+ TCP/UDP + port
 ## 19 浏览器缓存
 > Expires:HTTP1.O/cache-control:1.1(使用多)
 
-cache-control:
+cache-control{
 
 Last-Modified(最后修改时间)：用于记录修改，判断是否需要返回整片资源(包体)
 
@@ -1275,7 +1275,9 @@ Etag：当前资源在服务器的唯一标识，更精确的判断是否修改
 
 If-None-Match：包含Etag值，与服务器对比
 
-Max-age：客户机可以接收生存期，不大于指定时间的响应
+Max-age：客户机可以接收生存期不大于指定时间（以秒为单位）的响应
+
+}
 
 推荐: http://www.cnblogs.com/skynet/archive/2012/11/28/2792503.html
 
@@ -1378,6 +1380,7 @@ AVL是严格平衡树，因此在增加或者删除节点的时候，根据不�
 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
 
 ```python
+#                                先跳一阶      先跳二阶
 fib = lambda n: n if n <= 2 else fib(n - 1) + fib(n - 2)
 ```
 
@@ -1432,7 +1435,9 @@ f = lambda n: 1 if n < 2 else f(n - 1) + f(n - 2)
 
 在一个m行n列二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 
-使用Step-wise线性搜索。
+使用Step-wise线性搜索:
+  
+从右上角开始，每次将搜索值与右上角的值比较。如果大于右上角的值，则直接去除1行，否则去掉1列。
 
 ```python
 def get_value(l, r, c):
@@ -1474,7 +1479,7 @@ print l2
 
 ```python
 l1 = ['b','c','d','b','c','a','a']
-l2 = list(set(l1))
+l2={}.fromkeys(l1).keys()
 l2.sort(key=l1.index)
 print l2
 ```
@@ -1497,6 +1502,8 @@ print single
 
 `1->2->3->4`转换成`2->1->4->3`.
 
+递归
+
 ```python
 class ListNode:
     def __init__(self, x):
@@ -1513,6 +1520,37 @@ class Solution:
             next.next = head
             return next
         return head
+```
+
+双指针交换值
+
+```python
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def swapPairs(self, head):
+        try:
+            prev = head
+            tail = prev.next
+            while True:
+                prev.value, tail.value = tail.value, prev.value
+                prev = tail.next
+                tail = prev.next
+        finally:
+            return head
+```
+
+测试
+
+```python
+head1 = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+print(head1.value, head1.next.value, head1.next.next.value, head1.next.next.next.value, head1.next.next.next.next)
+solu = Solution()
+head2 = solu.swapPairs(head1)
+print(head2.value, head2.next.value, head2.next.next.value, head2.next.next.next.value, head2.next.next.next.next)
 ```
 
 ## 7 创建字典的方法
@@ -1644,73 +1682,57 @@ for i in range(1,min(len(a),len(b))):
             pass
 ```
 
-> 另外一种比较正规的方法，构造链表类
+> 构造链表类
 
 ```python
 class ListNode:
-    def __init__(self, x):
-        self.val = x
-        self.next = None
+    def __init__(self, x, next = None):
+        self.value = x
+        self.next = next
+
 def node(l1, l2):
-    length1, lenth2 = 0, 0
-    # 求两个链表长度
-    while l1.next:
-        l1 = l1.next
+    length1, length2 = 0, 0
+    #计算链表长度
+    l11 = l1
+    l22 = l2
+    while l11:
+        l11 = l11.next#尾节点
         length1 += 1
-    while l2.next:
-        l2 = l2.next
+    while l22:
+        l22 = l22.next
         length2 += 1
-    # 长的链表先走
-    if length1 > lenth2:
+    print(length1, length2)
+        #是否相交
+    #长链表先行
+    if length1 > length2:
         for _ in range(length1 - length2):
             l1 = l1.next
+            print(l1.value)
     else:
         for _ in range(length2 - length1):
             l2 = l2.next
+            print(l2.value)
     while l1 and l2:
         if l1.next == l2.next:
             return l1.next
         else:
             l1 = l1.next
             l2 = l2.next
+
+
+head1 = ListNode(1)
+head12 = ListNode(2)
+head13 = ListNode(3)
+head14 = ListNode(4)
+head1.next = head12
+head12.next = head13
+head13.next = head14
+
+head2 = ListNode(5, head13)
+
+conclusion = node(head1, head2)
+print(conclusion, conclusion.value)
 ```
-
-修改了一下:
-
-
-```python
-#coding:utf-8
-class ListNode:
-    def __init__(self, x):
-        self.val = x
-        self.next = None
-
-def node(l1, l2):
-    length1, length2 = 0, 0
-    # 求两个链表长度
-    while l1.next:
-        l1 = l1.next#尾节点
-        length1 += 1
-    while l2.next:
-        l2 = l2.next#尾节点
-        length2 += 1
-
-    #如果相交
-    if l1.next == l2.next:
-        # 长的链表先走
-        if length1 > length2:
-            for _ in range(length1 - length2):
-                l1 = l1.next
-            return l1#返回交点
-        else:
-            for _ in range(length2 - length1):
-                l2 = l2.next
-            return l2#返回交点
-    # 如果不相交
-    else:
-        return
-```
-
 
 思路: http://humaoli.blog.163.com/blog/static/13346651820141125102125995/
 
@@ -1742,6 +1764,7 @@ print binary_search(mylist,3)
 参考: http://blog.csdn.net/u013205877/article/details/76411718
 
 ## 11 快排
+> 选取一个数作为关键字，进过一趟排序将数据分割成两部分，一部分比关键字小，一部分大。重复进行。
 
 ```python
 #coding:utf-8
@@ -1763,7 +1786,7 @@ print quicksort([2,4,6,7,1,2,5])
 
 
 ## 12 找零问题
-
+> 使用
 
 ```python
 
